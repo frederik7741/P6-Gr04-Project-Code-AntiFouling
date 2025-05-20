@@ -1,4 +1,4 @@
-# 📦 Module 3 – Detection of Fouling
+#  Module 3 – Detection of Fouling
 
 This module focuses on detecting and analyzing **biofouling on underwater panels** using a combination of gradient-based thresholding and statistical evaluation techniques.
 
