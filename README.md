@@ -61,7 +61,7 @@ Each module directory contains scripts and tools focused on a specific stage of 
 ## Authors
 
 - Frederik Nielsen  
-- Andreas Hasselholt Jørgensensen
+- Andreas Hasselholt Jørgensen
 - Christian Nørkær Petersen
 - Oliver Søndermølle Hansen
 - Sture Nicolai Jaque
