@@ -93,7 +93,7 @@ Compares the **distribution of hue values** inside and outside the panel.
 ## Authors
 
 - Frederik Nielsen  
-- Andreas Hasselholt Jørgensensen
+- Andreas Hasselholt Jørgensen
 - Christian Nørkær Petersen
 - Oliver Søndermølle Hansen
 - Sture Nicolai Jaque
