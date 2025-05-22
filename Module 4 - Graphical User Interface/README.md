@@ -118,3 +118,12 @@ Generates formatted result tables (e.g., image-by-image summary of fouling perce
 
 Performs a series of statistical analyses on SUS scores from 20 participants to evaluate usability trends, identify outliers, and test significance against a usability benchmark.
 
+---
+
+## Authors
+
+- Frederik Nielsen  
+- Andreas Hasselholt Jørgensen
+- Christian Nørkær Petersen
+- Oliver Søndermølle Hansen
+- Sture Nicolai Jaque
