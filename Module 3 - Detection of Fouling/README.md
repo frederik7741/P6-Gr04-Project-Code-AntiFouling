@@ -156,7 +156,7 @@ Analyzes a single panel image for **fouling detection** using a **local gradient
 ## Authors
 
 - Frederik Nielsen  
-- Andreas Hasselholt Jørgensensen
+- Andreas Hasselholt Jørgensen
 - Christian Nørkær Petersen
 - Oliver Søndermølle Hansen
 - Sture Nicolai Jaque
