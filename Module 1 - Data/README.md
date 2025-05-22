@@ -59,7 +59,7 @@ This module is designed to:
 ## Authors
 
 - Frederik Nielsen  
-- Andreas Hasselholt Jørgensensen
+- Andreas Hasselholt Jørgensen
 - Christian Nørkær Petersen
 - Oliver Søndermølle Hansen
 - Sture Nicolai Jaque
