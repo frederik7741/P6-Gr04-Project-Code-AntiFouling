@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Detect Fouling** is a modular computer vision system designed to automate the assessment of biofouling on anti-fouling coated panels. The project aims to replace the traditional, manual, and subjective inspection process with a more efficient, consistent, and scalable alternative.
+The project aims to replace the traditional, manual, and subjective inspection process with a more efficient, consistent, and scalable alternative.
 
 Biofouling inspection traditionally involves manual assessments, which are labor-intensive and inconsistent due to human perception variability and environmental factors. This project introduces an automated pipeline to improve accuracy, efficiency, and usability in the evaluation of fouling growth.
 
