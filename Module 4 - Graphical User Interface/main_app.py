@@ -14,25 +14,24 @@ class PanelApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Graphical Interface")
-        self.root.state('zoomed')  # Maximize the window
-
-        # Initialize variables
-        self.current_location = "Baltic Asko"  # Set Baltic Asko as default
-        self.current_month_p1 = "Month 1"  # Default month for primary panel
-        self.current_month_p2 = "Month 1"  # Default month for comparison panel
+        self.root.state('zoomed') 
+        
+        self.current_location = "Baltic Asko"  
+        self.current_month_p1 = "Month 1"  
+        self.current_month_p2 = "Month 1" 
         self.current_view = "panel_list"
         self.current_panel = None
         self.compare_selection = []
         self.image_references = []
         self.graph_references = []
         self.location_buttons = {}
-        self.month_buttons = {}  # Keep track of month buttons
+        self.month_buttons = {} 
         self.previous_view = None
         self.last_single_view = None
         self.primary_selected_month_graph = 1
         self.compare_selected_month_graph = 1
-        self.show_graph_table = "graph"  # Default view
-        self.confirm_btn = None  # Declare confirm_btn here
+        self.show_graph_table = "graph" 
+        self.confirm_btn = None  
         self.compare_location_var = tk.StringVar()
 
         self.create_ui()
@@ -78,7 +77,7 @@ class PanelApp:
         for widget in self.month_frame.winfo_children():
             widget.destroy()
 
-        self.month_buttons = {}  # Clear previous buttons
+        self.month_buttons = {}  
         available_months = sorted(PANEL_DATA.get(self.current_location, {}).keys())
 
         for month in available_months:
@@ -86,7 +85,7 @@ class PanelApp:
                            padx=10, pady=5, font=("Arial", 10))
             btn.bind("<Button-1>", lambda e, m=month: self.switch_month(m))
             btn.pack(side='left')
-            self.month_buttons[month] = btn  # Store button
+            self.month_buttons[month] = btn  
 
         self.highlight_selected_month()
 
@@ -100,21 +99,21 @@ class PanelApp:
     def switch_location(self, new_location):
         self.current_location = new_location
         self.current_month_p1 = sorted(PANEL_DATA.get(new_location, {}).keys())[0] if PANEL_DATA.get(
-            new_location) else "Month 1"  # reset
+            new_location) else "Month 1"  
         self.current_month_p2 = sorted(PANEL_DATA.get(new_location, {}).keys())[0] if PANEL_DATA.get(
             new_location) else "Month 1"
         self.render_location_banner()
         self.render_month_selector()
         self.show_panels()
-        self.current_view = "panel_list"  # Reset
+        self.current_view = "panel_list"  
         self.current_panel = None
         self.compare_selection = []
 
     def switch_month(self, new_month):
         """Updates the displayed panels for the new month."""
         self.current_month_p1 = new_month
-        self.render_month_selector()  # Keep month buttons highlighted
-        self.show_panels()  # Re-render the panel list
+        self.render_month_selector()  
+        self.show_panels()  
 
     def find_panel_image(self, panel_code, location, is_compare=False):
         """Find panel image path based on location."""
@@ -125,15 +124,13 @@ class PanelApp:
         self.current_view = "panel_list"
         self.clear_content_frame()
 
-        # Ensure proper ordering of frames
+        
         self.banner_frame.pack(fill='x', before=self.content_frame)
         self.month_frame.pack(fill='x', before=self.content_frame)
 
-        # Update the banners
         self.render_location_banner()
         self.render_month_selector()
 
-        # Create scrollable canvas and pack it into the content_frame
         canvas = tk.Canvas(self.content_frame)
         scrollbar = ttk.Scrollbar(self.content_frame, orient="vertical", command=canvas.yview)
         scrollable_frame = ttk.Frame(canvas)
@@ -145,10 +142,8 @@ class PanelApp:
         scrollbar.pack(side="right", fill="y")
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
 
-        # Get panels for current month/location
         panels = PANEL_DATA.get(self.current_location, {}).get(self.current_month_p1, [])
 
-        # Group panels by prefix and create UI within the scrollable_frame
         panel_groups = {}
         for panel in panels:
             prefix = panel[:2]
@@ -184,14 +179,13 @@ class PanelApp:
 
     def show_panel_table(self, panel):
         self.current_panel = panel
-        self.current_view = "table"  # Set the view to table
+        self.current_view = "table"  
         self.show_graph_table = "table"  # Force the table to be shown
         self.render_panel_view()
 
     def render_panel_view(self):
         self.clear_content_frame()
 
-        # Show/hide location and month selectors based on view
         if self.current_view == "panel_list":
             self.banner_frame.pack(fill='x', before=self.content_frame)
             self.month_frame.pack(fill='x', before=self.content_frame)
@@ -275,10 +269,8 @@ class PanelApp:
             panel1_label.config(text=f"{panel1_code} ({self.current_month_p1})", anchor='center')
             panel2_label.config(text="")
 
-            # Reset compare selection when not in compare view
             self.compare_selection = []
 
-        # Panel info label
         info_label = ttk.Label(data_frame,
                                text=f"{self.current_panel} ({self.current_month_p1}) vs. {self.compare_selection[0]} ({self.current_month_p2})"
                                if self.current_view == "compare_view" and self.compare_selection
@@ -286,7 +278,6 @@ class PanelApp:
                                font=("Arial", 12, "bold"))
         info_label.pack(pady=10)
 
-        # Graph/Table switch - Always create and pack
         switch_frame = ttk.Frame(data_frame)
         switch_frame.pack(pady=10)
 
@@ -302,32 +293,25 @@ class PanelApp:
 
         self.update_graph_table_button_style()
 
-        # Frame to hold either the graph or the table - Always create and pack
         self.content_display_frame = ttk.Frame(data_frame)
         self.content_display_frame.pack(fill='both', expand=True)
 
-        # --- Configure Table Style Here ---
         table_style = ttk.Style()
         table_style.configure("Treeview.Heading", font=('Helvetica', 14))
         table_style.configure("Treeview", font=('Helvetica', 14), rowheight=25)
-        # ----------------------------------
 
-        # Show graph or table
         if self.show_graph_table == "graph":
             try:
-                # Clear any previous content in the display frame
                 for widget in self.content_display_frame.winfo_children():
                     widget.destroy()
                 self.graph_references = []
 
-                # Graph creation code
                 graph_title = f"Fouling Timeline for {self.current_panel}"
                 compare_panels_for_graph = self.compare_selection if self.current_view == "compare_view" else []
 
                 if self.current_view == "compare_view" and self.compare_selection:
                     graph_title = f"Fouling Timeline: {self.current_panel} vs {self.compare_selection[0]}"
 
-                # Create the timeline graph
                 (self.primary_points_graph,
                  self.primary_month_map_graph,
                  self.compare_points_graph,
@@ -340,10 +324,10 @@ class PanelApp:
                     compare_panels_for_graph,
                     self.graph_references,
                     self.update_graph_selection,
-                    int(self.current_month_p1.split()[1]),  # Convert "Month X" to X
+                    int(self.current_month_p1.split()[1]),  
                     int(self.current_month_p2.split()[1]) if self.current_month_p2 else 1,
-                    self.switch_month,  # Callback for primary panel month change
-                    self.switch_compare_month,  # Callback for comparison panel month change
+                    self.switch_month,  
+                    self.switch_compare_month,  
                     compare_location=self.compare_location_var.get() if self.current_view == "compare_view" and self.compare_selection else None
                 )
 
@@ -356,14 +340,14 @@ class PanelApp:
                 tk.messagebox.showerror("Graph Error", f"An error occurred while creating the graph: {e}")
 
         elif self.show_graph_table == "table":
-            # Clear any previous content in the display frame
+            
             for widget in self.content_display_frame.winfo_children():
                 widget.destroy()
             if self.current_view == "compare_view":
-                # Get months for the primary location
+                
                 primary_months = sorted(PANEL_DATA.get(self.current_location, {}).keys(),
                                         key=lambda m: int(m.split()[1]) if m.startswith("Month ") else m)
-                # Create the comparison table
+                
                 tree = ttk.Treeview(self.content_display_frame)
                 tree["columns"] = [f"{self.current_panel}", f"{self.compare_selection[0]}"]
                 tree.column("#0", width=120, stretch=tk.NO)
@@ -373,33 +357,28 @@ class PanelApp:
                 tree.heading(f"{self.current_panel}", text=f"{self.current_panel} ({self.current_location})")
                 tree.heading(f"{self.compare_selection[0]}",
                              text=f"{self.compare_selection[0]} ({self.compare_location_var.get()})")
-                # Add data for each month in the primary location
+                
                 for month in primary_months:
-                    # Get data for primary panel
                     panel1_data = PANEL_DATA.get(self.current_location, {}).get(month, {}).get(self.current_panel, {})
                     fouling1 = panel1_data.get("fouling", "N/A")
                     if isinstance(fouling1, (int, float)):
                         fouling1 = f"{fouling1:.2f}%"
-                    # Get data for comparison panel
                     panel2_data = PANEL_DATA.get(self.compare_location_var.get(), {}).get(
                         month, {}).get(self.compare_selection[0], {})
                     fouling2 = panel2_data.get("fouling", "N/A")
                     if isinstance(fouling2, (int, float)):
                         fouling2 = f"{fouling2:.2f}%"
                     tree.insert("", tk.END, text=month, values=[fouling1, fouling2], tags=(month,))
-                # Also add any months that exist *only* in the comparison location
                 comparison_months = sorted(PANEL_DATA.get(self.compare_location_var.get(), {}).keys(),
                                            key=lambda m: int(m.split()[1]) if m.startswith("Month ") else m)
                 for month in comparison_months:
                     if month not in primary_months:
-                        # Get data for primary panel (will be N/A)
                         panel1_data = PANEL_DATA.get(self.current_location, {}).get(month, {}).get(self.current_panel,
                                                                                                    {})
                         fouling1 = panel1_data.get("fouling", "N/A")
 
                         if isinstance(fouling1, (int, float)):
                             fouling1 = f"{fouling1:.2f}%"
-                        # Get data for comparison panel
                         panel2_data = PANEL_DATA.get(self.compare_location_var.get(), {}).get(
                             month, {}).get(self.compare_selection[0], {})
                         fouling2 = panel2_data.get("fouling", "N/A")
@@ -411,7 +390,6 @@ class PanelApp:
                 def on_row_double_click(event):
                     item = tree.selection()[0]
                     selected_month = tree.item(item, "text")
-                    # Update both panels to the selected month
                     self.current_month_p1 = selected_month
                     self.current_month_p2 = selected_month
                     self.render_panel_view()
@@ -419,14 +397,12 @@ class PanelApp:
                 tree.bind("<Double-1>", on_row_double_click)
                 tree.pack(fill='both', expand=True)
             else:
-                # Single panel table view (unchanged)
                 single_panel_table = create_data_table(self.content_display_frame, self.current_panel,
                                                        self.current_location,
                                                        self.update_panel_image_from_table)
                 if single_panel_table:
                     single_panel_table.config(style="Treeview")
 
-        # Add compare button
         if self.current_view != "compare_view" and self.current_view != "compare":
             compare_btn = ttk.Button(main_frame, text="Compare Panels",
                                      command=self.start_compare_mode)
@@ -434,7 +410,6 @@ class PanelApp:
         elif self.current_view == "compare_view":
             ttk.Label(main_frame).grid(row=2, column=0, columnspan=2)
 
-        # Back button
         back_btn = ttk.Button(self.content_frame,
                               text="Back to Panel List" if self.current_view != "compare_view" else "Back to Single Panel",
                               command=self.show_panels if self.current_view != "compare_view" else lambda: self.switch_view(
@@ -446,11 +421,8 @@ class PanelApp:
         Also updates the graph's closed circle position.
         """
         if self.current_panel and self.current_location:
-            # Update the current month
             self.current_month_p1 = selected_month
-            # Update the graph's selected month
             self.primary_selected_month_graph = int(selected_month.split()[1])
-            # Re-render the view to update both image and graph
             self.render_panel_view()
 
     def update_graph_selection(self, primary_month=None, compare_month=None):
@@ -484,7 +456,6 @@ class PanelApp:
         self.compare_selection = [self.current_panel]
         self.clear_content_frame()
 
-        # Create a new frame for compare mode content
         self.compare_frame = ttk.Frame(self.content_frame)
         self.compare_frame.pack(fill='both', expand=True)
 
@@ -492,7 +463,6 @@ class PanelApp:
                           font=("Arial", 16))
         label.pack(pady=10)
 
-        # Create scrollable frame for panel selection
         canvas = tk.Canvas(self.compare_frame)
         scrollbar = ttk.Scrollbar(self.compare_frame, orient="vertical", command=canvas.yview)
         scrollable_frame = ttk.Frame(canvas)
@@ -504,7 +474,6 @@ class PanelApp:
         scrollbar.pack(side="right", fill="y")
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
 
-        # Location selection for comparison
         location_frame = ttk.Frame(scrollable_frame)
         location_frame.pack(fill='x', pady=5)
 
@@ -515,7 +484,6 @@ class PanelApp:
         location_combo.pack(side='left')
         location_combo.bind("<<ComboboxSelected>>", self.update_compare_options)
 
-        # Month selection for comparison
         month_frame = ttk.Frame(scrollable_frame)
         month_frame.pack(fill='x', pady=5)
         ttk.Label(month_frame, text="Month:", font=("Arial", 12)).pack(side='left')
@@ -526,7 +494,6 @@ class PanelApp:
         self.panel_selection_frame = ttk.Frame(scrollable_frame)
         self.panel_selection_frame.pack(fill='x', pady=5)
 
-        # Buttons frame - now inside the scrollable frame, below panel selection
         button_frame = ttk.Frame(scrollable_frame)
         button_frame.pack(pady=10)
 
@@ -542,7 +509,6 @@ class PanelApp:
                               style="CompareButton.TButton")
         back_btn.pack(side='left', padx=5)
 
-        # Now that all widgets are created, update the options
         self.update_compare_options()
 
     def update_compare_options(self, event=None):
@@ -555,12 +521,10 @@ class PanelApp:
         else:
             self.compare_month_var.set('')
 
-        # Clear previous panel checkboxes
         for widget in self.panel_selection_frame.winfo_children():
             widget.destroy()
         self.panel_vars = {}
 
-        # Get panels for the selected location and the first available month
         first_month = available_months[0] if available_months else None
         if first_month and selected_location in PANEL_DATA:
             all_panels = sorted(PANEL_DATA[selected_location].get(first_month, []))
@@ -591,7 +555,6 @@ class PanelApp:
         elif selected_location not in PANEL_DATA:
             ttk.Label(self.panel_selection_frame, text="Location not found.").pack()
 
-        # Only configure confirm button if it exists
         if hasattr(self, 'confirm_btn') and self.confirm_btn:
             self.confirm_btn.config(state='disabled')
 
@@ -600,7 +563,7 @@ class PanelApp:
             if panel != panel_name:
                 v.set(False)
         selected = [p for p, v in self.panel_vars.items() if v.get()]
-        if self.confirm_btn: # Check if the button exists.
+        if self.confirm_btn: 
             self.confirm_btn.config(state='normal' if len(selected) == 1 else 'disabled')
 
     def show_compare_view(self):
@@ -610,7 +573,7 @@ class PanelApp:
         self.compare_selection = selected_panels
         self.last_single_view = self.previous_view
         self.current_view = "compare_view"
-        self.current_month_p2 = self.compare_month_var.get()  # Set the comparison month
+        self.current_month_p2 = self.compare_month_var.get()  
         self.render_panel_view()
 
     def switch_view(self, panel_name, view):
@@ -623,7 +586,6 @@ class PanelApp:
         for widget in self.content_frame.winfo_children():
             widget.destroy()
 
-        # Clear image and graph references
         self.image_references = []
         for ref in self.graph_references:
             ref.destroy()
