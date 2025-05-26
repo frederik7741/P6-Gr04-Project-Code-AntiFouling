@@ -1,6 +1,6 @@
 #  Module 4 — Graphical User Interface
 
-ctive graphical user interface (GUI) that displays
+interactive graphical user interface (GUI) that displays
 the fouling growth on the panels. For the most reliable and realistic fouling percentage
 to showcase this module, we have chosen to use the manually annotated ground truth
 dataset as our input. This will result in the optimal use case for this specific module, and it
