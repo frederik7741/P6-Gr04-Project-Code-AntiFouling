@@ -29,19 +29,7 @@ Each folder name follows the format:
 Some folders may include project-related directories such as `.idea/` and `runs/labelme2coco/`, which are used for managing annotation tool configurations and COCO format conversion.
 
 
----
 
-### 3. `Opdelt-In-lokation/`
-
-This directory splits the dataset by **sampling location**: `A` (Baltic Asko), `B`(Atlanten Brest), and `K`(Baltic Transitipon Kristineberg). Each location contains both **raw images** and their **annotations**, divided again into **10% and 90% subsets**.
-
-Folder naming format:
-- `A_image_10` → 10% raw images from Location A  
-- `A_Labeled_90` → 90% labeled data from Location A  
-(And so on for Locations B and K)
-
-
----
 
 ## Purpose
 
@@ -49,7 +37,6 @@ This module is designed to:
 
 - Store and organize all raw and labeled image data.
 - Enable month-based analysis for tracking fouling progression over time.
-- Enable location-based analysis to evaluate environmental impact on fouling.
 - Provide 10% and 90% data splits for flexible experimentation and model evaluation.
 - Feed consistent input into Module 2 (Panel Isolation), Module 3 (Fouling Detection), and Module 4 (GUI).
 
