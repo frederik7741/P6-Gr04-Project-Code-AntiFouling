@@ -13,11 +13,8 @@ def calculate_similarity_with_as_strided(image_uint8, window_size, comparison_th
     H, W = image_uint8.shape
     pad_offset = window_size // 2
 
-    # Pad the image (mode='reflect' matches generic_filter's default for this)
-    # If image_uint8 is uint8, padded_image will also be uint8.
     padded_image = np.pad(image_uint8, pad_width=pad_offset, mode='reflect')
     
-    # Create a strided view of the padded image.
     sH, sW = padded_image.strides
     strided_windows_view = as_strided(
         padded_image,
@@ -25,31 +22,22 @@ def calculate_similarity_with_as_strided(image_uint8, window_size, comparison_th
         strides=(sH, sW, sH, sW)
     )
     
-    # Get the center pixel value for each window from the original image.
-    # Reshape for broadcasting with strided_windows_view.
     center_pixel_values_view = image_uint8[:, :, np.newaxis, np.newaxis]
 
-    # --- CRITICAL STEP: Cast to float64 (or a sufficiently large signed int) BEFORE subtraction ---
-    # This mimics generic_filter's internal promotion of uint8 data to float64.
     strided_windows_float = strided_windows_view.astype(np.float64)
     center_values_float = center_pixel_values_view.astype(np.float64)
     
-    # 1. Handle the "if np.all(values == 0): return 0" condition:
-    #    generic_filter would pass the float64 window to this check.
     is_window_all_zero = np.all(strided_windows_float == 0.0, axis=(2, 3))
 
-    # 2. Calculate absolute differences using float arithmetic
     abs_differences = np.abs(strided_windows_float - center_values_float)
     
-    # 3. Count similar neighbors
     similarity_mask = abs_differences <= comparison_threshold
     similarity_counts = np.sum(similarity_mask, axis=(2, 3))
     
-    # 4. Combine results: if window was all zeros, count is 0, otherwise it's the calculated similarity_counts.
     final_counts = np.where(is_window_all_zero, 0, similarity_counts)
     
-    return final_counts.astype(np.int32) # Counts are integers
-
+    return final_counts.astype(np.int32) 
+    
 def compute_iou_pixel_count(gt, pt):
     groundT = np.count_nonzero(gt)
     predictedT = np.count_nonzero(pt)
@@ -57,7 +45,7 @@ def compute_iou_pixel_count(gt, pt):
     union_pixels = groundT + predictedT - intersection_pixels
 
     if union_pixels == 0:
-        return 0.0  # Avoid division by zero
+        return 0.0  # ungå at division med 0
 
     return intersection_pixels / union_pixels
 
@@ -84,17 +72,13 @@ def get_month_from_filename(fname):
     Extracts the month number from a filename expected to contain '_month_Y'.
     Example: 'someprefix_month_3.png' -> 3
     """
-    # Look for the pattern "_month_" followed by one or more digits
     match = re.search(r'_month_(\d+)', fname, re.IGNORECASE)
     if match:
         try:
-            # Group 1 contains the digits captured by (\d+)
             return int(match.group(1))
         except ValueError:
-            # Handle cases where the captured part is not a valid integer (though unlikely with \d+)
             print(f"[!] Warning: Could not parse month number from '{match.group(1)}' in filename '{fname}'")
             return None
-    # Return None if the pattern is not found
     return None
 
 image_folder = "C:/Users/ChristianPetersen/Desktop/Combined Images"
@@ -198,7 +182,7 @@ with open(csv_filename, 'w', newline='') as csvfile:
         best_iou_value = -1.0
         best_iou_thresh = None
         
-        if iou_scores_for_file: # Check if dictionary is not empty
+        if iou_scores_for_file: 
             for j_val, iou_val in iou_scores_for_file.items():
                 if iou_val > best_iou_value:
                     best_iou_value = iou_val
@@ -213,7 +197,7 @@ with open(csv_filename, 'w', newline='') as csvfile:
             iou_scores_for_file.get(6, 'N/A'), 
             iou_scores_for_file.get(7, 'N/A'), 
             iou_scores_for_file.get(8, 'N/A'), 
-            iou_scores_for_file.get(9, 'N/A'), # .get provides default if key is missing
+            iou_scores_for_file.get(9, 'N/A'), 
             iou_scores_for_file.get(10, 'N/A'),
             iou_scores_for_file.get(11, 'N/A'),
             iou_scores_for_file.get(12, 'N/A'),
