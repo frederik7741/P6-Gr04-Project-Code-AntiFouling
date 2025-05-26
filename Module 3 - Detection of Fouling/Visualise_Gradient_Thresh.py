@@ -13,11 +13,8 @@ def calculate_similarity_with_as_strided(image_uint8, window_size, comparison_th
     H, W = image_uint8.shape
     pad_offset = window_size // 2
 
-    # Pad the image (mode='reflect' matches generic_filter's default for this)
-    # If image_uint8 is uint8, padded_image will also be uint8.
     padded_image = np.pad(image_uint8, pad_width=pad_offset, mode='reflect')
     
-    # Create a strided view of the padded image.
     sH, sW = padded_image.strides
     strided_windows_view = as_strided(
         padded_image,
@@ -25,30 +22,21 @@ def calculate_similarity_with_as_strided(image_uint8, window_size, comparison_th
         strides=(sH, sW, sH, sW)
     )
     
-    # Get the center pixel value for each window from the original image.
-    # Reshape for broadcasting with strided_windows_view.
     center_pixel_values_view = image_uint8[:, :, np.newaxis, np.newaxis]
 
-    # --- CRITICAL STEP: Cast to float64 (or a sufficiently large signed int) BEFORE subtraction ---
-    # This mimics generic_filter's internal promotion of uint8 data to float64.
     strided_windows_float = strided_windows_view.astype(np.float64)
     center_values_float = center_pixel_values_view.astype(np.float64)
     
-    # 1. Handle the "if np.all(values == 0): return 0" condition:
-    #    generic_filter would pass the float64 window to this check.
     is_window_all_zero = np.all(strided_windows_float == 0.0, axis=(2, 3))
 
-    # 2. Calculate absolute differences using float arithmetic
     abs_differences = np.abs(strided_windows_float - center_values_float)
     
-    # 3. Count similar neighbors
     similarity_mask = abs_differences <= comparison_threshold
     similarity_counts = np.sum(similarity_mask, axis=(2, 3))
     
-    # 4. Combine results: if window was all zeros, count is 0, otherwise it's the calculated similarity_counts.
     final_counts = np.where(is_window_all_zero, 0, similarity_counts)
     
-    return final_counts.astype(np.int32) # Counts are integers
+    return final_counts.astype(np.int32) 
 
 def compute_iou_pixel_count(gt, pt):
     mask1_pixels = np.count_nonzero(gt)
@@ -57,7 +45,7 @@ def compute_iou_pixel_count(gt, pt):
     union_pixels = mask1_pixels + mask2_pixels - intersection_pixels
 
     if union_pixels == 0:
-        return 0.0  # Avoid division by zero
+        return 0.0  # ingen division med 0 dummies
 
     return intersection_pixels / union_pixels
 
@@ -96,8 +84,8 @@ def get_rgb_heatmap_color(value_normalized):
         r, g, b = 255, int((1 - t) * 255), 0
     return r, g, b
 
-image_path = "Eval Images/Month_1/AC1_month_1.png" # Example path
-json_path = "Labelled Data - Detect Fouling/Labelled Data Month 1 - 10/AC1_month_1.json" # Example path
+image_path = "Eval Images/Month_1/AC1_month_1.png" # set path
+json_path = "Labelled Data - Detect Fouling/Labelled Data Month 1 - 10/AC1_month_1.json" # set den path du har
 
 if not os.path.exists(image_path):
     print(f"Error: Image path not found: {image_path}")
@@ -213,15 +201,6 @@ else:
     plt.imshow(image, cmap='gray')
 plt.title("Original Image")
 plt.axis('off')
-
-# plt.subplot(1, 4, 2)
-# plt.imshow(output_mask_fouling, cmap='gray')
-# plt.title("Fouling Detected Mask")
-# plt.axis('off')
-
-# plt.subplot(1, 4, 3)
-# plt.imshow(fouling_mask_filtered, cmap='gray')
-# plt.title("Fouling Mask Ground Truth")
 
 
 plt.subplot(1, 2, 2)
