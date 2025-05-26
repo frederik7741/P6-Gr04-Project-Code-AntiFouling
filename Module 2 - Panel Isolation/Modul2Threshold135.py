@@ -15,7 +15,7 @@ def load_labelme_masks(json_path, image_shape):
     for shape in data['shapes']:
         label = shape['label'].lower()
         if len(shape['points']) < 3:
-            print(f"⚠️ Skipping shape with < 3 points: {label}")
+            print(f"Skipping shape with < 3 points: {label}")
             continue
 
         mask = shape_to_mask(image_shape[:2], shape['points'], shape['shape_type'])
@@ -112,6 +112,6 @@ def process_all_images(image_folder, json_folder):
 
 # === USAGE ===
 if __name__ == '__main__':
-    image_folder = '/Users/sturejaque/Documents/GitHub/P6_Anti_Fouling/Eval Images/Month 0'
+    image_folder = '/Users/sturejaque/Documents/GitHub/P6_Anti_Fouling/Eval Images/Month 0' #put dine dirs på pladserne
     json_folder = '/Users/sturejaque/Desktop/EvalM0'
     process_all_images(image_folder, json_folder)
