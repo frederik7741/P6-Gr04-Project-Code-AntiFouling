@@ -18,7 +18,7 @@
 #     for shape in data['shapes']:
 #         label = shape['label'].lower()
 #         if len(shape['points']) < 3:
-#            # print(f"⚠️ Skipping shape with < 3 points: {label}")
+#             print(f" Skipping shape with < 3 points: {label}")
 #             continue
 #
 #         mask = shape_to_mask(image_shape[:2], shape['points'], shape['shape_type'])
@@ -166,7 +166,7 @@ def load_labelme_masks(json_path, image_shape):
     for shape in data['shapes']:
         label = shape['label'].lower()
         if len(shape['points']) < 3:
-          #  print(f"⚠️ Skipping shape with < 3 points: {label}")
+            print(f" Skipping shape with < 3 points: {label}")
             continue
 
         mask = shape_to_mask(image_shape[:2], shape['points'], shape['shape_type'])
@@ -293,8 +293,6 @@ def process_all_images(image_folder, json_folder):
         else:
             print(f"Skipping {image_file}: matching JSON file not found.")
 
-
-# === USAGE ===
 if __name__ == '__main__':
     image_folder = 'Opdelt-In-lokation/K-image-90'
     json_folder = 'Opdelt-In-lokation/K_Labeled_90'
