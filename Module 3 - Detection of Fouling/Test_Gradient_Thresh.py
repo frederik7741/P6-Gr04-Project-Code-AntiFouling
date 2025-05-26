@@ -12,11 +12,8 @@ def calculate_similarity_with_as_strided(image_uint8, window_size, comparison_th
     H, W = image_uint8.shape
     pad_offset = window_size // 2
 
-    # Pad the image (mode='reflect' matches generic_filter's default for this)
-    # If image_uint8 is uint8, padded_image will also be uint8.
     padded_image = np.pad(image_uint8, pad_width=pad_offset, mode='reflect')
     
-    # Create a strided view of the padded image.
     sH, sW = padded_image.strides
     strided_windows_view = as_strided(
         padded_image,
@@ -24,30 +21,21 @@ def calculate_similarity_with_as_strided(image_uint8, window_size, comparison_th
         strides=(sH, sW, sH, sW)
     )
     
-    # Get the center pixel value for each window from the original image.
-    # Reshape for broadcasting with strided_windows_view.
     center_pixel_values_view = image_uint8[:, :, np.newaxis, np.newaxis]
 
-    # --- CRITICAL STEP: Cast to float64 (or a sufficiently large signed int) BEFORE subtraction ---
-    # This mimics generic_filter's internal promotion of uint8 data to float64.
     strided_windows_float = strided_windows_view.astype(np.float64)
     center_values_float = center_pixel_values_view.astype(np.float64)
     
-    # 1. Handle the "if np.all(values == 0): return 0" condition:
-    #    generic_filter would pass the float64 window to this check.
     is_window_all_zero = np.all(strided_windows_float == 0.0, axis=(2, 3))
 
-    # 2. Calculate absolute differences using float arithmetic
     abs_differences = np.abs(strided_windows_float - center_values_float)
     
-    # 3. Count similar neighbors
     similarity_mask = abs_differences <= comparison_threshold
     similarity_counts = np.sum(similarity_mask, axis=(2, 3))
     
-    # 4. Combine results: if window was all zeros, count is 0, otherwise it's the calculated similarity_counts.
     final_counts = np.where(is_window_all_zero, 0, similarity_counts)
     
-    return final_counts.astype(np.int32) # Counts are integers
+    return final_counts.astype(np.int32) 
 
 
 def compute_iou_pixel_count(gt, pt):
@@ -57,7 +45,7 @@ def compute_iou_pixel_count(gt, pt):
     union_pixels = groundT + predictedT - intersection_pixels
 
     if union_pixels == 0:
-        return 0.0  # Avoid division by zero
+        return 0.0  
 
     return intersection_pixels / union_pixels
 
@@ -84,15 +72,13 @@ def get_image_with_json(image_path, json_path):
     return image, data
 
 image_path = "Months/Month 2/AD3_month_2.png"
-# Get the filename after the second "/"
 filename_after_second_slash = "/".join(image_path.split("/", 2)[2:])
 json_path = "Labelled Data - Detect Fouling/Labelled Data Month 2 - 90/AD3_month_2.json"
 similarity_threshold = 5
 
 image_gray = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-image_color = cv2.imread(image_path, cv2.IMREAD_COLOR) # Read in color
-image_rgb = cv2.cvtColor(image_color, cv2.COLOR_BGR2RGB) # Convert to RGB for Matplotlib
-
+image_color = cv2.imread(image_path, cv2.IMREAD_COLOR) 
+image_rgb = cv2.cvtColor(image_color, cv2.COLOR_BGR2RGB)
 height, width = image_gray.shape[:2]
 
 with open(json_path, 'r') as f:
@@ -122,11 +108,9 @@ panel_mask_np = np.array(panel_mask)
 fouling_mask_np = np.array(fouling_mask)
 none_mask_np = np.array(none_mask)
 
-# --- Gradient & Similarity ---
-
-blur = cv2.GaussianBlur(image_gray, (5, 5), 0) # Use image_gray for processing
-sobel_x = cv2.Sobel(image_gray, cv2.CV_64F, 1, 0, ksize=3) # Use image_gray
-sobel_y = cv2.Sobel(image_gray, cv2.CV_64F, 0, 1, ksize=3) # Use image_gray
+blur = cv2.GaussianBlur(image_gray, (5, 5), 0) 
+sobel_x = cv2.Sobel(image_gray, cv2.CV_64F, 1, 0, ksize=3)
+sobel_y = cv2.Sobel(image_gray, cv2.CV_64F, 0, 1, ksize=3)
 gradient_magnitude = np.sqrt(sobel_x ** 2 + sobel_y ** 2)
 gradient_magnitude = (gradient_magnitude / gradient_magnitude.max()) * 255
 gradient_magnitude = gradient_magnitude.astype(np.uint8)
@@ -144,16 +128,6 @@ output_mask_fouling = np.zeros_like(gradient_magnitude, dtype=np.uint8)
 output_mask_non_fouling = np.zeros_like(gradient_magnitude, dtype=np.uint8)
 panel_coords_y, panel_coords_x = np.where(panel_boolean_mask)
     
-# current_output_mask = np.zeros_like(gradient_magnitude, dtype=np.uint8)
-# for k in range(len(panel_coords_y)):
-#     y = panel_coords_y[k]
-#     x = panel_coords_x[k]
-#     raw_similarity = similarity_count[y, x]
-#     if not determine_if_fouling(raw_similarity):
-#         current_output_mask[y, x] = 255
-        
-# iou_score = compute_iou_pixel_count(fouling_mask_filtered, current_output_mask)
-
 output_mask = np.zeros_like(gradient_magnitude, dtype=np.uint8)
 for k in range(len(panel_coords_y)):
     y = panel_coords_y[k]
@@ -185,7 +159,7 @@ custom_cmap = matplotlib.colors.LinearSegmentedColormap.from_list(
 
 
 plt.figure(figsize=(15, 5))
-plt.suptitle(f"Panel: {filename_after_second_slash}| Similarity Thresh: {similarity_threshold}| IoU: {iou:.3f}", fontsize=16)  # General title for the whole figure
+plt.suptitle(f"Panel: {filename_after_second_slash}| Similarity Thresh: {similarity_threshold}| IoU: {iou:.3f}", fontsize=16)  
 
 plt.subplot(1, 4, 1)
 im = plt.imshow(normalized_similarity_on_panel, cmap=custom_cmap, vmin=0, vmax=1)
@@ -206,29 +180,9 @@ plt.title("Ground Truth Mask")
 plt.axis('off')
 
 plt.subplot(1, 4, 4)
-plt.imshow(image_rgb) # Display the RGB image
+plt.imshow(image_rgb) 
 plt.title("Original Color Image")
 plt.axis('off')
 
-plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave space for suptitle
+plt.tight_layout(rect=[0, 0, 1, 0.95]) 
 plt.show()
-
-# plt.figure(figsize=(10, 5))
-# plt.plot(thresholds, iou_scores, marker='o')
-# plt.title("IoU Scores vs Similarity Thresholds")
-# plt.xlabel("Similarity Threshold")
-# plt.ylabel("IoU Score")
-# plt.grid()
-# plt.show()
-
-# plt.figure(figsize=(10, 10))
-# plt.subplot(1,2,1)
-# plt.imshow(current_output_mask, cmap='gray')
-# plt.title("Predicted Truth Mask")
-# plt.axis('off')
-
-# plt.subplot(1,2,2)
-# plt.imshow(fouling_mask_filtered, cmap='gray')
-# plt.title("Ground Truth Mask")
-# plt.axis('off')
-# plt.show()
