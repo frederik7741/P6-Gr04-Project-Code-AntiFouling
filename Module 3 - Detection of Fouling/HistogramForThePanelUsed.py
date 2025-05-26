@@ -4,7 +4,6 @@
 # import json
 # from PIL import Image, ImageDraw
 #
-# # Use the second script's load_labelme_annotation function
 # def load_labelme_annotation(path):
 #     with open(path, 'r') as f:
 #         return json.load(f)
@@ -53,7 +52,7 @@
 #     return fouling_vals, not_fouling_vals
 #
 #
-# # Change these paths to match your data structure
+# # husk at skife path
 # image_folder = "Opdelt-In-lokation/B-image-90"
 # annotation_folder = "Opdelt-In-lokation/B_Labeled_90"
 #
@@ -61,29 +60,25 @@
 # not_fouling_all = []
 # error_log = []
 #
-# # Loop through images in image_folder
 # for filename in os.listdir(image_folder):
 #     if filename.endswith('.png') or filename.endswith('.jpg'):
 #         image_path = os.path.join(image_folder, filename)
 #         json_name = os.path.splitext(filename)[0] + ".json"
 #         json_path = os.path.join(annotation_folder, json_name)
 #
-#         # Load image using OpenCV and convert to grayscale
+
 #         image_color = cv2.imread(image_path, cv2.IMREAD_COLOR)
 #         if image_color is None:
 #             print(f"[ERROR] Failed to load image: {filename}")
 #             continue
 #
-#         # Convert image to grayscale
 #         image = cv2.cvtColor(image_color, cv2.COLOR_BGR2GRAY)
 #
-#         # Check if corresponding JSON exists
 #         if not os.path.exists(json_path):
 #             print(f"[ERROR] Missing JSON for image: {filename}")
 #             continue
 #
 #         try:
-#             # Load the labelme annotation
 #             label_data = load_labelme_annotation(json_path)
 #         except Exception as e:
 #             print(f"[ERROR] Could not read JSON {filename}: {e}")
@@ -91,9 +86,7 @@
 #             continue
 #
 #         try:
-#             # Extract masks from labelme annotation
 #             fouling_mask, not_fouling_mask = extract_masks(label_data)
-#             # Collect red channel values from the image using the extracted masks
 #             fouling_vals, not_fouling_vals = collect_red_channel_values(image_color, fouling_mask, not_fouling_mask)
 #             fouling_all.extend(fouling_vals)
 #             not_fouling_all.extend(not_fouling_vals)
@@ -121,7 +114,6 @@
 # plt.show()
 #
 #
-# # Error summary
 # if error_log:
 #     print("\n=== SUMMARY OF ERRORS ===")
 #     for filename, reason in error_log:
@@ -139,12 +131,10 @@ import json
 from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
 
-# Load labelme annotation
 def load_labelme_annotation(path):
     with open(path, 'r') as f:
         return json.load(f)
 
-# Convert polygons to binary mask
 def polygons_to_mask(polygons, img_shape):
     mask = np.zeros(img_shape[:2], dtype=np.uint8)
     for poly in polygons:
@@ -152,7 +142,6 @@ def polygons_to_mask(polygons, img_shape):
         cv2.fillPoly(mask, [pts], 1)
     return mask
 
-# Extract masks for fouling, none, and panel
 def extract_masks(labelme_data):
     shapes = labelme_data['shapes']
     fouling_polys = []
@@ -180,7 +169,6 @@ def extract_masks(labelme_data):
 
     return fouling_final.astype(bool), not_fouling.astype(bool)
 
-# Extract hue values from HSV image
 def collect_hue_values(image, fouling_mask, not_fouling_mask):
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     hue_channel = hsv_image[:, :, 0]
@@ -188,7 +176,6 @@ def collect_hue_values(image, fouling_mask, not_fouling_mask):
     not_fouling_vals = hue_channel[not_fouling_mask]
     return fouling_vals, not_fouling_vals
 
-# Paths to image and annotation folders
 image_folder = "Opdelt-In-lokation/K-image-90"
 annotation_folder = "Opdelt-In-lokation/K_Labeled_90"
 
@@ -196,20 +183,17 @@ fouling_all = []
 not_fouling_all = []
 error_log = []
 
-# Loop through images
 for filename in os.listdir(image_folder):
     if filename.endswith('.png') or filename.endswith('.jpg'):
         image_path = os.path.join(image_folder, filename)
         json_name = os.path.splitext(filename)[0] + ".json"
         json_path = os.path.join(annotation_folder, json_name)
 
-        # Load image
         image_color = cv2.imread(image_path, cv2.IMREAD_COLOR)
         if image_color is None:
             print(f"[ERROR] Failed to load image: {filename}")
             continue
 
-        # Check for corresponding JSON
         if not os.path.exists(json_path):
             print(f"[ERROR] Missing JSON for image: {filename}")
             continue
@@ -231,14 +215,13 @@ for filename in os.listdir(image_folder):
             print(f"[ERROR] Exception during processing {filename}: {e}")
             error_log.append((filename, str(e)))
 
-# Plot histogram
-bins = np.arange(181)  # Hue values range from 0 to 179 in OpenCV
+bins = np.arange(181)  
 fouling_hist, _ = np.histogram(fouling_all, bins=bins, density=True)
 not_fouling_hist, _ = np.histogram(not_fouling_all, bins=bins, density=True)
 
 plt.figure(figsize=(10, 6))
-plt.plot(bins[:-1], fouling_hist, color='red', label='Fouling')   # Solid red line
-plt.plot(bins[:-1], not_fouling_hist, 'r:', label='Panel')       # Dotted red line
+plt.plot(bins[:-1], fouling_hist, color='red', label='Fouling')   
+plt.plot(bins[:-1], not_fouling_hist, 'r:', label='Panel')       
 plt.xlabel('Hue Value (0–179)')
 plt.ylabel('Normalized Frequency')
 plt.title('Hue Distribution in HSV Color Space')
@@ -247,12 +230,10 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
-# Error summary
+
 if error_log:
     print("\n=== SUMMARY OF ERRORS ===")
     for filename, reason in error_log:
         print(f"{filename}: {reason}")
 else:
     print("\nNo errors encountered.")
-
-
