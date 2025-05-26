@@ -1,11 +1,8 @@
 import csv
 
-# --- Configuration ---
-# IMPORTANT: Change this to the actual path of your CSV file if different
 CSV_FILEPATH = 'generated_data_everything/fouling_iou_results.csv'
-FILENAME_HEADER = 'Filename'  # The header for the filename column
-TARGET_IOU_HEADER = 'IoU_5'   # The specific IoU column to sort by
-# -------------------
+FILENAME_HEADER = 'Filename'  
+TARGET_IOU_HEADER = 'IoU_5'   
 
 results_list = []
 
@@ -13,7 +10,6 @@ try:
     with open(CSV_FILEPATH, mode='r', newline='') as infile:
         reader = csv.DictReader(infile)
         
-        # Check if the required headers are present
         if FILENAME_HEADER not in reader.fieldnames:
             print(f"Error: Filename header '{FILENAME_HEADER}' not found in CSV file '{CSV_FILEPATH}'.")
             print(f"Available headers: {reader.fieldnames}")
@@ -45,7 +41,6 @@ try:
     if not results_list:
         print(f"No data found for '{TARGET_IOU_HEADER}' or filenames in '{CSV_FILEPATH}'.")
     else:
-        # Sort the list by 'value' (which is the TARGET_IOU_HEADER score) in descending order
         results_list.sort(key=lambda item: item['value'], reverse=True)
         
         print(f"\n--- Filenames sorted by '{TARGET_IOU_HEADER}' (Highest to Lowest) ---")
@@ -53,9 +48,8 @@ try:
         header_filename_text = FILENAME_HEADER
         header_value_text = f"{TARGET_IOU_HEADER} Value"
         
-        # Determine column width for filename for cleaner printing
         max_len_filename = max(len(item['filename']) for item in results_list) if results_list else 0
-        max_len_filename = max(max_len_filename, len(header_filename_text))  # Ensure header fits
+        max_len_filename = max(max_len_filename, len(header_filename_text))  
 
         print(f"{header_filename_text:<{max_len_filename}}  {header_value_text}")
         print(f"{'-'*max_len_filename}  {'-'*len(header_value_text)}")
