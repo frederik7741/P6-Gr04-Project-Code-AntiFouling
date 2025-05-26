@@ -30,9 +30,6 @@ The system is built around four core modules:
 - **Surface Region Classification**  
   The system must differentiate fouled vs. clean surface areas on the panels.
 
-- **Fouling Area Calculation**  
-  Calculates and displays the percentage of the panel covered by fouling.
-
 - **Comparative Growth Analysis**  
   Allows users to visually compare fouling progression across panels and months.
 
@@ -45,7 +42,7 @@ The repository is organized into the following module directories:
 - `Module 1 - Data/`  
   Data such as images and annotations structured according to month or location.
 
-- `Module 1 - Data/`  
+- `Module 2 - Panel Isolation/`  
   Code for automatic panel isolation and background removal script for figures in section 3.3.
 
 - `Module 3 - Detection of Fouling/`  
