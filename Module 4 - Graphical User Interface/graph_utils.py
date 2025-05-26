@@ -27,7 +27,6 @@ def create_timeline_graph(parent_frame, current_location, current_panel, compare
                 try:
                     month_num = int(month_str.split()[1])
                     months_data[month_num] = month_str
-                    # Ensure fouling is treated as a percentage (0-100)
                     fouling_data[month_num] = panels[panel_code].get('fouling', 0)
                     if fouling_data[month_num] > 100:
                          fouling_data[month_num] = 100
@@ -37,7 +36,6 @@ def create_timeline_graph(parent_frame, current_location, current_panel, compare
                     continue
         return months_data, fouling_data
 
-    # Get primary panel data
     primary_months_data, primary_fouling_data = get_panel_data(current_location, current_panel)
     primary_months_sorted = sorted(primary_months_data.keys())
     primary_fouling_sorted = [primary_fouling_data[m] for m in primary_months_sorted]
@@ -47,11 +45,9 @@ def create_timeline_graph(parent_frame, current_location, current_panel, compare
                   foreground="red").pack()
         return None, None, None, None, None, None
 
-    # Plot primary panel data with correct initial selection
     (primary_scatter,) = ax.plot(primary_months_sorted, primary_fouling_sorted, 'b-', alpha=0.5, zorder=1,
                                  label=current_panel)
 
-    # Initialize facecolors with closed circle on the selected month
     face_colors = ['black' if month == primary_selected_month else 'none'
                    for month in primary_months_sorted]
 
@@ -65,7 +61,6 @@ def create_timeline_graph(parent_frame, current_location, current_panel, compare
     )
     primary_month_map = {month_num: month_str for month_num, month_str in primary_months_data.items()}
 
-    # Handle comparison panel if exists
     compare_scatter = None
     compare_points = None
     compare_month_map = {}
@@ -91,7 +86,6 @@ def create_timeline_graph(parent_frame, current_location, current_panel, compare
             compare_month_map = {month_num: month_str for month_num, month_str in compare_months_data.items()}
             ax.legend()
 
-    # Configure graph appearance
     ax.set_title(f'Fouling Timeline: {current_panel}' +
                  (f' vs {compare_selection[0]}' if compare_selection else ''))
     ax.set_xlabel('Month')
@@ -100,13 +94,11 @@ def create_timeline_graph(parent_frame, current_location, current_panel, compare
     ax.yaxis.set_ticks(np.arange(y_min, y_max + 1, y_interval))
     ax.grid(True, zorder=0)
 
-    # Set x-axis ticks
     all_months = sorted(set(primary_months_sorted + (compare_months_sorted if compare_selection else [])))
     ax.set_xticks(all_months)
     ax.set_xticklabels([str(m) for m in all_months])
     ax.xaxis.set_major_locator(plt.FixedLocator(all_months))
 
-    # Create canvas and connect pick event
     canvas = FigureCanvasTkAgg(fig, master=parent_frame)
     canvas.draw()
     canvas_widget = canvas.get_tk_widget()
