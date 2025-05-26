@@ -17,7 +17,6 @@ def extract_hsv_pixels(image, annotation, outside=False):
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     hue, saturation, value = cv2.split(hsv_image)
 
-    # Apply the mask (inside or outside the panel)
     hue_pixels = hue[mask == 255]
     saturation_pixels = saturation[mask == 255]
     value_pixels = value[mask == 255]
@@ -88,7 +87,7 @@ def plot_hsv_histograms(inside, outside, title):
     plt.show()
 
 
-json_folder = '/Users/sturejaque/Desktop/m0'  # Replace with actual folder path
+json_folder = '/Users/sturejaque/Desktop/m0'  # set til dine dir:
 inside_hue, inside_saturation, inside_value, outside_hue, outside_saturation, outside_value = process_json_files(json_folder)
 
 plot_hsv_histograms(inside_hue, outside_hue, 'Hue')
