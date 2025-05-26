@@ -8,8 +8,6 @@ will demonstrate the potential of having a uniform medium for representing fouli
 ---
 
 ### `main_app.py` — _Graphical Interface for Visualization_  
-> _**[Note: Described manually due to length]**_
-
 Serves as the **main application** file for launching the GUI. It integrates all core components from `graph_utils.py`, `table_utils.py`, and `image_utils.py`, allowing users to interactively view image predictions, compare panels.
 
 ---
