@@ -23,7 +23,7 @@ This directory contains **annotated image data**, grouped by month and further s
 
 Each folder name follows the format:  
 `Labelled Data Month X - Y`, where:
-- **X** = the month number (1–6)
+- **X** = the month number (0–6)
 - **Y** = the subset size (10 for 10%, 90 for 90%)
 
 Some folders may include project-related directories such as `.idea/` and `runs/labelme2coco/`, which are used for managing annotation tool configurations and COCO format conversion.
