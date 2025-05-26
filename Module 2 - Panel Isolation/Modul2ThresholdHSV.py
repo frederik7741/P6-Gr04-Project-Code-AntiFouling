@@ -15,7 +15,7 @@ def load_labelme_masks(json_path, image_shape):
     for shape in data['shapes']:
         label = shape['label'].lower()
         if len(shape['points']) < 3:
-            print(f"⚠️ Skipping shape with < 3 points: {label}")
+            print(f" Skipping shape with < 3 points: {label}")
             continue
 
         mask = shape_to_mask(image_shape[:2], shape['points'], shape['shape_type'])
@@ -27,20 +27,15 @@ def load_labelme_masks(json_path, image_shape):
 
 
 def create_predicted_panel_mask(image, hue_range1=(0, 10), hue_range2=(170, 179)):
-    # Convert the image from BGR to HSV
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    # Extract the hue channel
     hue_channel = hsv_image[:, :, 0]
 
-    # Create masks for the two hue ranges
     mask1 = (hue_channel >= hue_range1[0]) & (hue_channel <= hue_range1[1])
     mask2 = (hue_channel >= hue_range2[0]) & (hue_channel <= hue_range2[1])
 
-    # Combine the two masks
     combined_mask = mask1 | mask2
 
-    # Convert the boolean mask to uint8 for compatibility with other functions
     return combined_mask.astype(np.uint8)
 
 
@@ -125,6 +120,6 @@ def process_all_images(image_folder, json_folder):
 
 # === USAGE ===
 if __name__ == '__main__':
-    image_folder = '/Users/sturejaque/Documents/GitHub/P6_Anti_Fouling/Eval Images/Month_6'
+    image_folder = '/Users/sturejaque/Documents/GitHub/P6_Anti_Fouling/Eval Images/Month_6' # put dir path her :)
     json_folder = '/Users/sturejaque/Documents/GitHub/P6_Anti_Fouling/Labelled Data - Detect Fouling/Labelled Data Month 6 - 10'
     process_all_images(image_folder, json_folder)
