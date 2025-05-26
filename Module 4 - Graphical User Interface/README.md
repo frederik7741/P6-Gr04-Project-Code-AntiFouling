@@ -114,12 +114,6 @@ Generates formatted result tables (e.g., image-by-image summary of fouling perce
 
 ---
 
-### `Results.R` — _ System Usability Score (SUS) Statistical Analysis_
-
-Performs a series of statistical analyses on SUS scores from 20 participants to evaluate usability trends, identify outliers, and test significance against a usability benchmark.
-
----
-
 ## Authors
 
 - Frederik Nielsen  
