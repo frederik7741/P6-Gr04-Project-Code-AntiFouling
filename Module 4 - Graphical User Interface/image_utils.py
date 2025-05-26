@@ -1,8 +1,8 @@
 import os
 from PIL import Image, ImageTk
 
-BASE_IMAGE_PATH = r"C:\Uni\MED6\Bachelor project\P6_Anti_Fouling\Interactive Interface\Panel Images"
-ROTATION_ANGLE = -90  # Degrees to rotate
+BASE_IMAGE_PATH = r"C:\Uni\MED6\Bachelor project\P6_Anti_Fouling\Interactive Interface\Panel Images" #change dir
+ROTATION_ANGLE = -90  
 
 def find_panel_image(location, month, panel_code):
     image_folder = os.path.join(BASE_IMAGE_PATH, location, month)
@@ -40,8 +40,8 @@ def load_and_display_image(root, image_path, label, image_references, max_height
 
         photo = ImageTk.PhotoImage(resized_image)
         label.config(image=photo)
-        label.image = photo  # Keep a reference!
-        image_references.append(photo)  # Add to the list
+        label.image = photo  
+        image_references.append(photo) 
 
     except Exception as e:
         print(f"Error loading image: {e}")
