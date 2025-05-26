@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Module 1** serves as the foundation of the fouling detection pipeline. It contains all the raw and annotated image data needed to train and evaluate the system. The images are structured by **time (month)** and **location**, with further division into subsets representing **10% and 90%** of the available data.
+**Module 1** serves as the foundation of the fouling detection pipeline. It contains all the raw and annotated image data needed to train and evaluate the system. The images are structured by **time (month)**, with further division into subsets representing **10% and 90%** of the available data.
 
 This module does not contain code, only data, and is designed to be used by the subsequent modules in the pipeline.
 
@@ -36,7 +36,7 @@ Some folders may include project-related directories such as `.idea/` and `runs/
 This directory splits the dataset by **sampling location**: `A` (Baltic Asko), `B`(Atlanten Brest), and `K`(Baltic Transitipon Kristineberg). Each location contains both **raw images** and their **annotations**, divided again into **10% and 90% subsets**.
 
 Folder naming format:
-- `A-image-10` → 10% raw images from Location A  
+- `A_image_10` → 10% raw images from Location A  
 - `A_Labeled_90` → 90% labeled data from Location A  
 (And so on for Locations B and K)
 
