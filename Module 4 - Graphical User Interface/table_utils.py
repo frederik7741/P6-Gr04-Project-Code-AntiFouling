@@ -1,5 +1,3 @@
-# table_utils.py
-
 import tkinter as tk
 from tkinter import ttk
 from data import PANEL_DATA 
