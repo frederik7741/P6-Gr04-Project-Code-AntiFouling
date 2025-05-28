@@ -10,14 +10,7 @@ This module does not contain code, only data, and is designed to be used by the 
 
 ## Data Structure
 
-### 1. `Months/`
-
-This directory contains **raw images** grouped by the month they were taken. Each folder (`Month 0` to `Month 6`) represents the fouling condition at a specific time point during the submersion period. there is also a folder Eval Images with the 10% of the images.
-
-
----
-
-### 2. `Months Annotations/`
+### 1. `Months Annotations/`
 
 This directory contains **annotated image data**, grouped by month and further split into **10% and 90% subsets**. These subsets are used for balancing or staging data during model training and evaluation.
 
